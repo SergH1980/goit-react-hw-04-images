@@ -20,39 +20,36 @@ const initialValues = {
   query: ``,
 };
 
-export default class Searchbar extends Component {
-  static propTypes = {
-    onSubmit: PropTypes.func.isRequired,
-  };
-
-  render() {
-    const handleSubmit = (values, { resetForm }) => {
-      this.props.onSubmit(values.query);
-      // resetForm();
-    };
-    return (
-      <Formik
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-        validationSchema={schema}
-      >
-        <FormWrap>
-          <Form autoComplete="off" autoFocus>
-            <SearchButton type="submit">
-              <SearchButtonIcon>
-                <IconContext.Provider value={{ size: `2.5em` }}>
-                  <div>
-                    <MdSearch />
-                  </div>
-                </IconContext.Provider>
-              </SearchButtonIcon>
-            </SearchButton>
-
-            <Field name="query" placeholder="Search images and photos" />
-            <ErrorMessage name="query" component={`div`} />
-          </Form>
-        </FormWrap>
-      </Formik>
-    );
+export default function Searchbar({ onSubmit }) {
+  function handleSubmit(values) {
+    onSubmit(values.query);
   }
+  return (
+    <Formik
+      initialValues={initialValues}
+      onSubmit={handleSubmit}
+      validationSchema={schema}
+    >
+      <FormWrap>
+        <Form autoComplete="off" autoFocus>
+          <SearchButton type="submit">
+            <SearchButtonIcon>
+              <IconContext.Provider value={{ size: `2.5em` }}>
+                <div>
+                  <MdSearch />
+                </div>
+              </IconContext.Provider>
+            </SearchButtonIcon>
+          </SearchButton>
+
+          <Field name="query" placeholder="Search images and photos" />
+          <ErrorMessage name="query" component={`div`} />
+        </Form>
+      </FormWrap>
+    </Formik>
+  );
 }
+
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};

@@ -1,39 +1,39 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { Overlay, ModalImage } from './Modal.styled';
 import PropTypes from 'prop-types';
 
-export default class Modal extends Component {
-  static propTypes = {
-    onClose: PropTypes.func.isRequired,
-    children: PropTypes.any.isRequired,
-  };
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown);
+export default function Modal({ onClose, children }) {
+  function handleKeyDown(event) {
+    if (event.code === `Escape`) {
+      onClose();
+    }
+  }
+
+  function handleBackdropClick(event) {
+    if (event.target === event.currentTarget) {
+      onClose();
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
     document
       .querySelector(`.Overlay`)
-      .addEventListener(`click`, this.handleBackdropClick);
-  }
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown);
-  }
+      .addEventListener(`click`, handleBackdropClick);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener(`click`, handleBackdropClick);
+    };
+  });
 
-  handleKeyDown = event => {
-    if (event.code === `Escape`) {
-      this.props.onClose();
-    }
-  };
-
-  handleBackdropClick = event => {
-    if (event.target === event.currentTarget) {
-      this.props.onClose();
-    }
-  };
-
-  render() {
-    return (
-      <Overlay className="Overlay">
-        <ModalImage>{this.props.children}</ModalImage>
-      </Overlay>
-    );
-  }
+  return (
+    <Overlay className="Overlay">
+      <ModalImage>{children}</ModalImage>
+    </Overlay>
+  );
 }
+
+Modal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  children: PropTypes.any.isRequired,
+};
