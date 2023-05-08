@@ -23,6 +23,13 @@ export default function ImageGallery({ request }) {
     if (request === ``) {
       return;
     }
+    //     if (searchValue !== request) {
+    //         setStatus(`pending`);
+    //     setImages([]);
+    //     setPage(1);
+    //     setSearchValue(request);
+
+    // }
 
     setStatus(`pending`);
     setImages([]);
